@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<body>
+<head>
+    <title>Python Flask Blog App</title>
+
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+
+    <link href="http://getbootstrap.com/examples/jumbotron-narrow/jumbotron-narrow.css" rel="stylesheet">
+
+    <script src="/static/js/jquery-3.1.1.js"></script>
+    <script src="/static/js/jquery.ui.widget.js"></script>
+
+    <script type="text/javascript" src="/static/js/jquery.fileupload.js"></script>
+    <script type="text/javascript" src="/static/js/jquery.fileupload-process.js"></script>
+    <script type="text/javascript" src="/static/js/jquery.fileupload-ui.js"></script>
+
+    <script>
+      $(function(){
+            $('#fileupload').fileupload({
+                url: 'upload',
+                dataType: 'json',
+                add: function (e, data) {
+                  data.submit();
+                },
+                success:function(response,status) {
+                  console.log(response.filename);
+                  var filePath = 'static/Uploads/' + response.filename;
+                  $('#imgUpload').attr('src',filePath);
+                  $('#filePath').val(filePath);
+                  console.log('success');
+                },
+                error:function(error){
+                        console.log(error);
+                }
+            });
+      })
+    </script>
+
+    <style>
+        .btn-file {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-file input[type=file] {
+            position: absolute;
+            top: 0;
+            right: 0;
+            min-width: 100%;
+            min-height: 100%;
+            font-size: 100px;
+            text-align: right;
+            filter: alpha(opacity=0);
+            opacity: 0;
+            outline: none;
+            background: white;
+            cursor: inherit;
+            display: block;
+        }
+        a:link, a:visited {
+          background-color: #ADD8E6;
+          color: balck;
+          padding: 14px 25px;
+          text-align: center;
+          text-decoration: none;
+          display: inline-block;
+        }
+
+        a:hover, a:active {
+          background-color: blue;
+        }
+
+        .button {
+          border: none;
+          color: white;
+          padding: 15px 32px;
+          text-align: center;
+          text-decoration: none;
+          display: inline-block;
+          font-size: 16px;
+          margin: 4px 2px;
+          cursor: pointer;
+        }
+
+        .button1 {background-color: #ADD8E6;}
+    </style>
+
+</head>
+<div class="header">
+  <nav>
+    <ul class="nav nav-pills pull-right">
+        {% if blogs.user%}
+      <li role="presentation" class="active"><a href="/user/{{ blogs.user }}">Home</a></li>
+        {% endif %}
+      <li role="presentation" ><a href="/logout">Logout</a></li>
+    </ul>
+  </nav>
+</div>
+<h1>Welcome to Blog Application </h1>
+{% for x in blogs.data%}
+<div class="card-body" style="width: 100rem;">
+  <h3 class="card-title">{{x.blog_name}}</h3>
+    <p class="card-text">{{x.blog_text}}</p>
+  <h6 class="card-title">{{x.blog_created}}</h6>
+    <button >
+        <a href="/update_blog/{{ x.id }}">Edit</a>
+    </button>
+    <button >
+        <a href="/delete_blog/{{ x.id }}">Delete</a>
+    </button>
+</div>
+{% endfor %}
+
+</body>
+</html>
